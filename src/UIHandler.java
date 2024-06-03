@@ -68,41 +68,54 @@ public class UIHandler {
 
         do {
             searchAgain = false;
-            boolean isFound = false;
-            System.out.println("\nDigite o nome do produto desejado:");
-            String query = scanner.nextLine();
+            String query = getQuery();
+            Product product = findProduct(query);
 
-            if (!query.isEmpty()) {
-                for (Product product : productList) {
-                    String productName = product.getName().toLowerCase();
-                    String productDescription = product.getDescription().toLowerCase();
-                    String queryToLowercase = query.toLowerCase();
-
-                    if (productName.contains(queryToLowercase) ||
-                        productDescription.contains(queryToLowercase)) {
-                        System.out.println();
-                        System.out.println(product);
-                        isFound = true;
-
-                        if (product.getStock() > 0) {
-                            System.out.print("\nDeseja adicionar " + product.getDescription() + " ao carrinho? (S/N): ");
-                            String response = scanner.nextLine();
-
-                            if (response.equalsIgnoreCase("S")) {
-                                searchAgain = addToCart(product, order);
-                            }
-                        }
-                    }
-                }
-
-                if (!isFound) {
-                    System.out.println("Produto não encontrado. Tente novamente");
-                }
+            if (product != null) {
+                displayProduct(product);
+                searchAgain = handleProductSelection(product, order);
             } else {
                 System.out.println("Produto não encontrado. Tente novamente");
             }
 
         } while (searchAgain);
+    }
+
+    private String getQuery() {
+        System.out.println("\nDigite o nome do produto desejado:");
+        return scanner.nextLine();
+    }
+
+    private Product findProduct(String query) {
+        for (Product product : productList) {
+            String productName = product.getName().toLowerCase();
+            String productDescription = product.getDescription().toLowerCase();
+            String queryToLowercase = query.toLowerCase();
+
+            if (productName.contains(queryToLowercase) || productDescription.contains(queryToLowercase)) {
+                return product;
+            }
+        }
+
+        return null;
+    }
+
+    private void displayProduct(Product product) {
+        System.out.println();
+        System.out.println(product);
+    }
+
+    private boolean handleProductSelection(Product product, Order order) {
+        if (product.getStock() > 0) {
+            System.out.print("\nDeseja adicionar " + product.getDescription() + " ao carrinho? (S/N): ");
+            String response = scanner.nextLine();
+
+            if (response.equalsIgnoreCase("S")) {
+                return addToCart(product, order);
+            }
+        }
+
+        return true;
     }
 
     private boolean addToCart(Product product, Order order) {
