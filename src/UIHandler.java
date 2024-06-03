@@ -122,39 +122,57 @@ public class UIHandler {
         boolean searchAgain = true;
 
         while (true) {
-            System.out.print("Quantas unidades deseja adicionar? ");
-            int quantity = scanner.nextInt();
-            scanner.nextLine();
+            int quantity = getQuantity();
 
             if (quantity > product.getStock() || quantity == 0) {
-                System.out.println();
-                System.out.println("Não foi possível adicionar " + product.getDescription() + " ao carrinho");
-                System.out.println("Quantidade solicitada: " + quantity);
-                System.out.println("Quantidade em estoque: " + product.getStock());
-                System.out.println("Por favor, selecione uma quantidade entre 0 e " + product.getStock());
+                displayStockError(product, quantity);
             } else {
-                OrderItem item = new OrderItem(UUID.randomUUID(), product.getPrice(), quantity, product, order);
-                order.getItems().add(item);
-
-                System.out.println("Produto adicionado com sucesso!");
-                System.out.println("O que deseja fazer?");
-                System.out.println("\t1. Continuar comprando");
-                System.out.println("\t2. Finalizar compra");
-                System.out.print("\nDigite o número da opção desejada (1-2): ");
-
-                int option = scanner.nextInt();
-                scanner.nextLine();
-
-                if (option == 2) {
-                    proceedToCheckout(order);
-                    searchAgain = false;
-                }
-
+                addProductToOrder(product, order, quantity);
+                searchAgain = handleCheckoutOption(order);
                 break;
             }
         }
 
         return searchAgain;
+    }
+
+    private int getQuantity() {
+        System.out.print("Quantas unidades deseja adicionar? ");
+        int quantity = scanner.nextInt();
+        scanner.nextLine();
+
+        return quantity;
+    }
+
+    private void displayStockError(Product product, int quantity) {
+        System.out.println();
+        System.out.println("Não foi possível adicionar " + product.getDescription() + " ao carrinho");
+        System.out.println("Quantidade solicitada: " + quantity);
+        System.out.println("Quantidade em estoque: " + product.getStock());
+        System.out.println("Por favor, selecione uma quantidade entre 0 e " + product.getStock());
+    }
+
+    private void addProductToOrder(Product product, Order order, int quantity) {
+        OrderItem item = new OrderItem(UUID.randomUUID(), product.getPrice(), quantity, product, order);
+        order.getItems().add(item);
+        System.out.println("Produto adicionado com sucesso!");
+    }
+
+    private boolean handleCheckoutOption(Order order) {
+        System.out.println("\nO que deseja fazer?");
+        System.out.println("\t1. Continuar comprando");
+        System.out.println("\t2. Finalizar compra");
+        System.out.print("\nDigite o número da opção desejada (1-2): ");
+
+        int option = scanner.nextInt();
+        scanner.nextLine();
+
+        if (option == 2) {
+            proceedToCheckout(order);
+            return false;
+        }
+
+        return true;
     }
 
     private void proceedToCheckout(Order order) {
