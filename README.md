@@ -21,8 +21,16 @@ que representará uma rotina a ser desenvolvida em Java. O diagrama deve ser cri
 
 ---
 
+## Diagrama de Classe
+
+<img src="https://github.com/alexbraga/psc-atividade05/blob/master/diagrams/class-diagram.png?raw=true" alt="Class Diagram" />
+
+---
+
 ## Unidade Curricular
-- ### Programação de Soluções Computacionais
+
+### Programação de Soluções Computacionais
+  - #### Centro Universitário de Belo Horizonte (UniBH)
 
 #### Professores
   - Alexandre "Montanha" de Oliveira
